@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "ES2019",
+    "module": "ESNext",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "declaration": false,
+    "removeComments": true,
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true,
+
+    "noUnusedLocals": true,
+    "strict": true,
+    "outDir": "build",
+    "baseUrl": "src",
+    "paths": {
+      "src/*": ["./*"]
+    }
+  },
+  "exclude": ["build", "node_modules"]
+}

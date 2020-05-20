@@ -1,0 +1,33 @@
+.block {
+  transition: all 250ms;
+  display: flex;
+  border: none;
+  padding: 0;
+  width: 100%;
+  & > label {
+    margin: 1rem 0 0.4rem 0;
+  }
+  min-height: 500px;
+}
+
+.form {
+  width: 100%;
+}
+
+.enter {
+  transform: translateX(-200%);
+}
+.enterActive {
+  transform: translateX(0%);
+}
+.exit {
+  transform: translateX(0%);
+  opacity: 1;
+}
+.exitActive {
+  transform: translateX(400%);
+  opacity: 0;
+}
+.enterActive .exitActive {
+  transition: all 500ms;
+}

@@ -18,6 +18,7 @@ function Button({
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     onClick && onClick(e);
   };
+
   return (
     <button
       className={cls(className, styles.button)}

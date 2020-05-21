@@ -73,6 +73,7 @@ const SourceFrom: React.FC<{ onSubmit: (data: IDataForm) => void }> = observer(
     );
 
     const renderSteps = () => {
+      console.log(articles.form.step);
       if (articles.form.step === 0) {
         return renderFirstStep();
       }
@@ -93,6 +94,7 @@ const SourceFrom: React.FC<{ onSubmit: (data: IDataForm) => void }> = observer(
 
     return (
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <h3>Create your news</h3>
         {renderStepFields()}
         <Button type="submit">Continue</Button>
       </form>

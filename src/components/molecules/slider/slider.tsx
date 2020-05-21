@@ -1,27 +1,32 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { observer } from 'mobx-react-lite';
-import { CSSTransition } from 'react-transition-group';
-import styles from './slider.scss';
+import { observer } from "mobx-react-lite";
+import { CSSTransition } from "react-transition-group";
+import styles from "./slider.scss";
 
 interface ISliderComponentProps {
   isOpen?: boolean;
+  onClose: () => void;
 }
 
-const Slider: React.FC<ISliderComponentProps> = ({ children, isOpen = false }) => {
-  const [isVisible, setIsVisible] = React.useState<boolean>(false);
+const Slider: React.FC<ISliderComponentProps> = ({
+  children,
+  isOpen = false,
+  onClose,
+}) => {
+  const [isVisible, setIsVisible] = React.useState<boolean>(isOpen);
   const sliderRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (isOpen && !sliderRef?.current?.contains(event.target as Node)) {
-        handleToggle();
+        handleClose();
       }
     }
 
-    window.addEventListener('click', handleClickOutside);
+    window.addEventListener("click", handleClickOutside);
     return () => {
-      window.removeEventListener('click', handleClickOutside);
+      window.removeEventListener("click", handleClickOutside);
     };
   }, [isOpen]);
 
@@ -29,8 +34,9 @@ const Slider: React.FC<ISliderComponentProps> = ({ children, isOpen = false }) =
     setIsVisible(isOpen);
   }, [isOpen]);
 
-  const handleToggle = () => {
-    setIsVisible(state => !state);
+  const handleClose = () => {
+    setIsVisible(false);
+    onClose();
   };
 
   return (
@@ -44,7 +50,7 @@ const Slider: React.FC<ISliderComponentProps> = ({ children, isOpen = false }) =
         }}
       >
         <section className={styles.wrapper}>
-          <span className={styles.close} onClick={handleToggle}>
+          <span className={styles.close} onClick={handleClose}>
             ×
           </span>
           {children}

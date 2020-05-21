@@ -36,11 +36,11 @@ const Articles: React.FC<IArticlesComponentProps> = ({
   }
 
   if (!articles || articles.length === 0) {
-    return <div>No results. Try to use other filters...</div>;
+    return <div>No results..</div>;
   }
 
   const renderView = (article: IArticle): React.ReactElement | null => (
-    <Row key={article.publishedAt} article={article} isFavourite={false} />
+    <Row key={article.id} article={article} isFavourite={false} />
   );
 
   return (

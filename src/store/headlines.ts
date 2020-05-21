@@ -14,9 +14,17 @@ interface IQuery {
 }
 
 interface IData {
-  status: string;
-  totalResults: number;
-  articles: IArticle[];
+  response: {
+    status: string;
+    userTier: string;
+    total: number;
+    startIndex: number;
+    pageSize: number;
+    currentPage: number;
+    pages: number;
+    orderBy: string;
+    results: IArticle[];
+  };
 }
 
 type countryParamType = "ru" | "us";
@@ -38,37 +46,17 @@ export const SourceType = types.model({
 });
 
 export const ArticleModel = types.model({
-  author: types.maybeNull(types.string),
-  title: types.string,
-  description: types.maybeNull(types.string),
-  url: types.string,
-  urlToImage: types.maybeNull(types.string),
-  publishedAt: types.string,
-  content: types.maybeNull(types.string),
-  source: SourceType,
-});
-
-export const CategoryType = types.maybe(
-  types.union(
-    types.literal("business"),
-    types.literal("sports"),
-    types.literal("entertainment"),
-    types.literal("general"),
-    types.literal("health"),
-    types.literal("science"),
-    types.literal("technology")
-  )
-);
-
-export const SourceModel = types.model({
-  articles: types.optional(types.array(ArticleModel), []),
-  status: types.enumeration("State", [
-    "initial",
-    "loading",
-    "loaded",
-    "failed",
-  ]),
-  error: types.string,
+  id: types.string,
+  type: types.string,
+  sectionId: types.string,
+  sectionName: types.string,
+  webPublicationDate: types.string,
+  webTitle: types.string,
+  webUrl: types.string,
+  apiUrl: types.string,
+  isHosted: types.boolean,
+  pillarId: types.string,
+  pillarName: types.string,
 });
 
 export const FormModel = types.model({
@@ -84,20 +72,21 @@ export const FormModel = types.model({
 
 function prepareDataForArticle(dataForm: IDataForm) {
   const { url, author, headline, text } = dataForm;
-  const publishedAt = new Date(Date.now()).toISOString();
+  const webPublicationDate = new Date(Date.now()).toISOString();
 
   return {
-    url,
-    publishedAt,
-    author,
-    title: headline,
-    description: text,
-    urlToImage: null,
-    content: null,
-    source: {
-      id: "1",
-      name: dataForm.sourceMedia,
-    },
+    id:
+      "world/2020/may/21/nhs-groups-nervous-about-lockdown-easing-without-contact-tracing",
+    type: "article",
+    sectionId: "world",
+    sectionName: author,
+    webPublicationDate,
+    webTitle: headline,
+    webUrl: url,
+    apiUrl: "",
+    isHosted: false,
+    pillarId: "pillar/news",
+    pillarName: "",
   };
 }
 export const ArticlesStore = types
@@ -110,7 +99,6 @@ export const ArticlesStore = types
     ]),
     error: types.string,
     articles: types.optional(types.array(ArticleModel), []),
-    source: SourceModel,
     page: types.number,
     form: FormModel,
   })
@@ -121,11 +109,6 @@ export const ArticlesStore = types
           isLoading: self.status === DATA_STATE.loading,
           isLoaded: self.status === DATA_STATE.loaded,
           error: self.error,
-        },
-        source: {
-          isLoading: self.source.status === DATA_STATE.loading,
-          isLoaded: self.source.status === DATA_STATE.loaded,
-          error: self.source.error,
         },
       };
     },
@@ -144,7 +127,7 @@ export const ArticlesStore = types
       self.form.fields = { ...self.form.fields, ...data };
     };
 
-    const nextStep = (data: IDataForm) => {
+    const nextStep = () => {
       if (self.form.step === 1) {
         self.form.step = 0;
         return;
@@ -183,7 +166,8 @@ export const ArticlesStore = types
 
       try {
         const { body }: IResponse<IData> = yield getApi<IParams>({
-          url: "https://newsapi.org/v2/top-headlines",
+          url:
+            "https://content.guardianapis.com/search?api-key=91d2be46-870f-46ca-9378-36090d49caea",
           params: {
             country: "ru",
             page: self.page,
@@ -191,36 +175,16 @@ export const ArticlesStore = types
           },
         });
 
-        self.articles = cast([...articles, ...body.articles]);
+        self.articles = cast([...articles, ...body.response.results]);
       } catch (e) {
         self.status = e.message;
       }
       self.status = DATA_STATE.loaded;
     });
 
-    const getSourceArticles = flow(function*(sourceId) {
-      self.source.status = DATA_STATE.loading;
-
-      try {
-        const { body }: IResponse<IData> = yield getApi<IParams>({
-          url: "https://newsapi.org/v2/top-headlines",
-          params: {
-            sources: sourceId,
-          },
-        });
-
-        self.source.articles = cast(body.articles);
-      } catch (e) {
-        self.source.status = DATA_STATE.failed;
-        self.source.error = e.message;
-      }
-      self.source.status = DATA_STATE.loaded;
-    });
-
     return {
       setCategory,
       getArticles,
-      getSourceArticles,
       searchArticles,
       saveForm,
       nextStep,

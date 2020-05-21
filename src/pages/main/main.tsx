@@ -13,6 +13,7 @@ import { ErrorWrapper } from "src/components/molecules/error";
 import { Slider } from "src/components/molecules/slider";
 import { SourceForm } from "src/components/organisms/form";
 import { IDataForm } from "src/components/organisms/form/source-form";
+import { Button } from "src/components/molecules/button";
 
 const Main: React.FC = () => {
   const location = useLocation();
@@ -23,7 +24,7 @@ const Main: React.FC = () => {
 
   const getArticles = React.useCallback(
     (isMore?: boolean) => {
-      articles.getArticles(query, isMore);
+       articles.getArticles(query, isMore);
     },
     [articles, query]
   );
@@ -36,13 +37,17 @@ const Main: React.FC = () => {
     setIsOpen(true);
   };
 
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
   const handleSubmit = (data: IDataForm) => {
     if (articles.form.step === 1) {
       articles.saveArticle(data);
       setIsOpen(false);
     }
     articles.saveForm(data);
-    articles.nextStep(data);
+    articles.nextStep();
   };
 
   const { statuses } = articles;
@@ -50,16 +55,21 @@ const Main: React.FC = () => {
   return (
     <div className={styles.layout}>
       <ErrorWrapper error={statuses.articles.error}>
-        <button onClick={handleOpen}>Создать</button>
+        <Button
+          className={styles.createButton}
+          type="button"
+          onClick={handleOpen}
+        >
+          Create
+        </Button>
         <Articles
           articles={articles.articles}
           isLoading={statuses.articles.isLoading}
           onEndedList={getArticles}
         />
-        <Slider isOpen={isOpen}>
+        <Slider isOpen={isOpen} onClose={handleClose}>
           <SourceForm onSubmit={handleSubmit} />
         </Slider>
-        <Articles articles={articles.source.articles} isLoading={false} />
       </ErrorWrapper>
     </div>
   );

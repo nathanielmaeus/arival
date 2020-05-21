@@ -1,9 +1,11 @@
 import { ArticlesStore } from "src/store/headlines";
 import { types, Instance, onSnapshot } from "mobx-state-tree";
 import { createContext, useContext } from "react";
+import { ArticleStore } from "./article";
 
 const RootModel = types.model({
   articles: ArticlesStore,
+  article: ArticleStore,
 });
 
 export const rootStore = RootModel.create({
@@ -11,11 +13,6 @@ export const rootStore = RootModel.create({
     articles: [],
     status: "initial",
     error: "",
-    source: {
-      error: "",
-      status: "initial",
-      articles: [],
-    },
     form: {
       fields: {
         headline: "",
@@ -27,6 +24,11 @@ export const rootStore = RootModel.create({
       step: 0,
     },
     page: 0,
+  },
+  article: {
+    article: null,
+    status: "initial",
+    error: "",
   },
 });
 

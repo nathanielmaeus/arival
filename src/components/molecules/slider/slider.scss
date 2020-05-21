@@ -9,15 +9,13 @@
   background: #fff;
   border-left: 1px solid #eee;
   overflow-y: scroll;
-}
+  box-sizing: border-box;
+  width: 600px;
 
-.cc {
-  position: fixed;
-  top: 0;
-  margin-top: 16px;
-  right: 24px;
-  font-size: 24px;
-  cursor: pointer;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    padding: 48px 8px 0 8px;
+  }
 }
 
 .close {
@@ -30,22 +28,22 @@
 
 .enter,
 .appear {
-  width: 0;
+  transform: translateX(600px);
 }
 
 .enterActive,
 .appearActive {
-  width: 600px;
-  transition: all 200ms ease-in-out;
+  transform: translateX(0);
+  transition: transform 200ms ease-in-out;
 }
 
 .exit {
-  width: 600px;
+  transform: translateX(0);
 }
 
 .exitActive {
-  width: 0;
-  transition: all 200ms;
+  transform: translateX(600px);
+  transition: transform 200ms;
 }
 
 .hidden {
@@ -55,5 +53,4 @@
 .back {
   position: absolute;
   height: 100%;
-  width: 100%;;
 }

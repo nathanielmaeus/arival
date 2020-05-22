@@ -1,9 +1,9 @@
 # arival
 
 libs: 
-typescript
-react-hook-form
-react-transition-group
+typescript,
+react-hook-form,
+react-transition-group,
 superagent
 
 Steps: 

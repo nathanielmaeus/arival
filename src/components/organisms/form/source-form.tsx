@@ -96,7 +96,7 @@ const SourceFrom: React.FC<{ onSubmit: (data: IDataForm) => void }> = observer(
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <h3>Create your news</h3>
         {renderStepFields()}
-        <Button type="submit">Continue</Button>
+        <Button type="submit" className={styles.submitButton}>Continue</Button>
       </form>
     );
   }

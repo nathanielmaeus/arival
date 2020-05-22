@@ -24,6 +24,10 @@ const Slider: React.FC<ISliderComponentProps> = ({
       }
     }
 
+    isOpen
+      ? (document.body.style.overflow = "hidden")
+      : (document.body.style.overflow = "unset");
+
     window.addEventListener("click", handleClickOutside);
     return () => {
       window.removeEventListener("click", handleClickOutside);

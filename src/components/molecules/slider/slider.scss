@@ -8,13 +8,11 @@
   padding: 48px;
   background: #fff;
   border-left: 1px solid #eee;
-  overflow-y: scroll;
   box-sizing: border-box;
   width: 600px;
 
   @media screen and (max-width: 768px) {
     width: 100%;
-    padding: 48px 8px 0 8px;
   }
 }
 

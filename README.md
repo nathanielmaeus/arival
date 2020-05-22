@@ -1,7 +1,7 @@
 # arival
 
 libs: 
-typescript,
+mobx-state-tree,
 react-hook-form,
 react-transition-group,
 superagent

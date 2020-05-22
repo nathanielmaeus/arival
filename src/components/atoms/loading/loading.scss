@@ -1,0 +1,69 @@
+$time: 400ms;
+
+.LoadingDots {
+  display: inline-block;
+  margin: auto;
+}
+
+.item {
+  width: 4px;
+  height: 4px;
+  margin: 2px;
+  display: inline-block;
+  vertical-align: middle;
+  background-color: #3a3a3a;
+  opacity: 1;
+  border-radius: 50%;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+
+.itemFirst {
+  -webkit-animation: loadingDot $time ($time * 0.25) infinite ease-out;
+  -moz-animation: loadingDot $time ($time * 0.25) infinite ease-out;
+  -o-animation: loadingDot $time ($time * 0.25) infinite ease-out;
+  -ms-animation: loadingDot $time ($time * 0.25) infinite ease-out;
+  animation: loadingDot $time ($time * 0.25) infinite ease-out;
+}
+.itemSecond {
+  -webkit-animation: loadingDot $time ($time * 0.5) infinite ease-out;
+  -moz-animation: loadingDot $time ($time * 0.5) infinite ease-out;
+  -o-animation: loadingDot $time ($time * 0.5) infinite ease-out;
+  -ms-animation: loadingDot $time ($time * 0.5) infinite ease-out;
+  animation: loadingDot $time ($time * 0.5) infinite ease-out;
+}
+.itemThird {
+  -webkit-animation: loadingDot $time ($time * 0.75) infinite ease-out;
+  -moz-animation: loadingDot $time ($time * 0.75) infinite ease-out;
+  -o-animation: loadingDot $time ($time * 0.75) infinite ease-out;
+  -ms-animation: loadingDot $time ($time * 0.75) infinite ease-out;
+  animation: loadingDot $time ($time * 0.75) infinite ease-out;
+}
+
+@keyframes loadingDot {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(0, -5px);
+  }
+  50% {
+    transform: translate(0, 0);
+  }
+  75% {
+    transform: translate(0, -5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}

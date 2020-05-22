@@ -1,8 +1,9 @@
-import { types, flow, cast } from "mobx-state-tree";
+import { rootStore } from "./index";
+import { types, flow, Instance, getParent } from "mobx-state-tree";
 
 import { IArticle } from "src/types";
 import { IResponse, getApi } from "src/services/api";
-import { DATA_STATE } from "./types";
+import { DATA_STATE, ArticleModel, StatusModel } from "./types";
 
 interface IData {
   response: {
@@ -13,28 +14,11 @@ interface IData {
   };
 }
 
-export const ArticleModel = types.model({
-  id: types.string,
-  type: types.string,
-  sectionId: types.string,
-  sectionName: types.string,
-  webPublicationDate: types.string,
-  webTitle: types.string,
-  webUrl: types.string,
-  apiUrl: types.string,
-  isHosted: types.boolean,
-  pillarId: types.string,
-  pillarName: types.string,
-});
+type RootModel = Instance<typeof rootStore>;
 
 export const ArticleStore = types
   .model({
-    status: types.enumeration("State", [
-      "initial",
-      "loading",
-      "loaded",
-      "failed",
-    ]),
+    status: StatusModel,
     error: types.string,
     article: types.maybeNull(ArticleModel),
   })
@@ -51,12 +35,25 @@ export const ArticleStore = types
     const getArticle = flow(function*(id: string) {
       self.status = DATA_STATE.loading;
 
+      const pollDraftParent = getParent<RootModel>(self);
+      const selectedArticle = pollDraftParent.articles.articles.find(
+        (article) => article.id === id
+      );
+
+      if (selectedArticle) {
+        self.article = { ...selectedArticle };
+        self.status = DATA_STATE.loaded;
+        return;
+      }
+
       try {
-        const { body }: IResponse<IData> = yield getApi({
-          url: `https://content.guardianapis.com/${id}?api-key=91d2be46-870f-46ca-9378-36090d49caea`,
+        const {
+          body: { response },
+        }: IResponse<IData> = yield getApi({
+          url: `https://content.guardianapis.com/${id}`,
         });
 
-        self.article = body.response.content;
+        self.article = response.content;
       } catch (e) {
         self.status = e.message;
         self.status = DATA_STATE.failed;

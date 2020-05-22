@@ -7,6 +7,7 @@ import { observer } from "mobx-react-lite";
 import cls from "classnames";
 
 import styles from "./articles.scss";
+import { Loading } from "src/components/atoms/loading";
 
 interface IArticlesComponentProps {
   articles: IArticle[];
@@ -32,7 +33,7 @@ const Articles: React.FC<IArticlesComponentProps> = ({
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!articles || articles.length === 0) {

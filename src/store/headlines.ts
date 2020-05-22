@@ -1,17 +1,10 @@
-import { ICategory } from "../types/index";
 import { types, flow, cast } from "mobx-state-tree";
 
 import { IArticle } from "src/types";
 import { IResponse, getApi } from "src/services/api";
-import { DATA_STATE } from "./types";
 import { IDataForm } from "src/components/organisms/form/source-form";
 
-interface IQuery {
-  search: string;
-  category: ICategory;
-  order: string;
-  sorting: string;
-}
+import { DATA_STATE, ArticleModel, StatusModel } from "./types";
 
 interface IData {
   response: {
@@ -27,13 +20,7 @@ interface IData {
   };
 }
 
-type countryParamType = "ru" | "us";
-
 export interface IParams {
-  category?: ICategory;
-  country?: countryParamType;
-  q?: string;
-  sources?: string;
   pageSize?: number;
   page?: number;
 }
@@ -43,20 +30,6 @@ const MAX_PAGE = 5;
 export const SourceType = types.model({
   id: types.maybeNull(types.string),
   name: types.maybeNull(types.string),
-});
-
-export const ArticleModel = types.model({
-  id: types.string,
-  type: types.string,
-  sectionId: types.string,
-  sectionName: types.string,
-  webPublicationDate: types.string,
-  webTitle: types.string,
-  webUrl: types.string,
-  apiUrl: types.string,
-  isHosted: types.boolean,
-  pillarId: types.string,
-  pillarName: types.string,
 });
 
 export const FormModel = types.model({
@@ -70,13 +43,12 @@ export const FormModel = types.model({
   step: types.number,
 });
 
-function prepareDataForArticle(dataForm: IDataForm) {
-  const { url, author, headline, text } = dataForm;
+function prepareDataForArticle(dataForm: IDataForm, id: number) {
+  const { url, author, headline } = dataForm;
   const webPublicationDate = new Date(Date.now()).toISOString();
 
   return {
-    id:
-      "world/2020/may/21/nhs-groups-nervous-about-lockdown-easing-without-contact-tracing",
+    id: `${id}`,
     type: "article",
     sectionId: "world",
     sectionName: author,
@@ -89,14 +61,10 @@ function prepareDataForArticle(dataForm: IDataForm) {
     pillarName: "",
   };
 }
+
 export const ArticlesStore = types
   .model({
-    status: types.enumeration("State", [
-      "initial",
-      "loading",
-      "loaded",
-      "failed",
-    ]),
+    status: StatusModel,
     error: types.string,
     articles: types.optional(types.array(ArticleModel), []),
     page: types.number,
@@ -114,14 +82,6 @@ export const ArticlesStore = types
     },
   }))
   .actions((self) => {
-    const setCategory = (query: IQuery) => {
-      const params: IParams = {
-        q: query.search,
-        category: query.category,
-      };
-      getArticles(params);
-    };
-
     const saveForm = (data: IDataForm) => {
       console.log(data);
       self.form.fields = { ...self.form.fields, ...data };
@@ -137,19 +97,11 @@ export const ArticlesStore = types
 
     const saveArticle = (dataForm2: IDataForm) => {
       const dataForm = { ...self.form.fields, ...dataForm2 };
-      const article = prepareDataForArticle(dataForm);
+      const article = prepareDataForArticle(dataForm, self.articles.length);
       self.articles = cast([article, ...self.articles]);
     };
 
-    const searchArticles = (query: IQuery) => {
-      const params: IParams = {
-        q: query.search,
-        category: query.category,
-      };
-      getArticles(params);
-    };
-
-    const getArticles = flow(function*(params?: IParams, more?: boolean) {
+    const getArticles = flow(function*(more?: boolean) {
       let articles = self.articles;
 
       if (self.page + 1 > MAX_PAGE) {
@@ -167,11 +119,9 @@ export const ArticlesStore = types
       try {
         const { body }: IResponse<IData> = yield getApi<IParams>({
           url:
-            "https://content.guardianapis.com/search?api-key=91d2be46-870f-46ca-9378-36090d49caea",
+            "https://content.guardianapis.com/search",
           params: {
-            country: "ru",
             page: self.page,
-            ...params,
           },
         });
 
@@ -183,9 +133,7 @@ export const ArticlesStore = types
     });
 
     return {
-      setCategory,
       getArticles,
-      searchArticles,
       saveForm,
       nextStep,
       saveArticle,

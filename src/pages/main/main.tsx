@@ -1,8 +1,5 @@
 import * as React from "react";
-import { useLocation } from "react-router-dom";
 import { observer } from "mobx-react-lite";
-
-import { getQuery } from "src/getQuery";
 
 import styles from "./main.scss";
 
@@ -16,20 +13,20 @@ import { IDataForm } from "src/components/organisms/form/source-form";
 import { Button } from "src/components/molecules/button";
 
 const Main: React.FC = () => {
-  const location = useLocation();
-  const query = getQuery(location);
-  const { articles } = useStore();
-
+  const { articles: articlesStore } = useStore();
   const [isOpen, setIsOpen] = React.useState(false);
 
   const getArticles = React.useCallback(
     (isMore?: boolean) => {
-       articles.getArticles(query, isMore);
+      articlesStore.getArticles(isMore);
     },
-    [articles, query]
+    [articlesStore]
   );
 
   React.useEffect(() => {
+    if (articlesStore.articles.length !== 0) {
+      return;
+    }
     getArticles();
   }, []);
 
@@ -42,15 +39,15 @@ const Main: React.FC = () => {
   };
 
   const handleSubmit = (data: IDataForm) => {
-    if (articles.form.step === 1) {
-      articles.saveArticle(data);
+    if (articlesStore.form.step === 1) {
+      articlesStore.saveArticle(data);
       setIsOpen(false);
     }
-    articles.saveForm(data);
-    articles.nextStep();
+    articlesStore.saveForm(data);
+    articlesStore.nextStep();
   };
 
-  const { statuses } = articles;
+  const { statuses } = articlesStore;
 
   return (
     <div className={styles.layout}>
@@ -63,7 +60,7 @@ const Main: React.FC = () => {
           Create
         </Button>
         <Articles
-          articles={articles.articles}
+          articles={articlesStore.articles}
           isLoading={statuses.articles.isLoading}
           onEndedList={getArticles}
         />

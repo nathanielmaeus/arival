@@ -1,20 +1,29 @@
-import { types } from 'mobx-state-tree';
+import { types } from "mobx-state-tree";
 
 export enum DATA_STATE {
-  initial = 'initial',
-  loading = 'loading',
-  loaded = 'loaded',
-  failed = 'failed',
+  initial = "initial",
+  loading = "loading",
+  loaded = "loaded",
+  failed = "failed",
 }
 
-const DataStateModel = types.union(
-  types.literal('initial'),
-  types.literal('loading'),
-  types.literal('loaded'),
-  types.literal('failed'),
-);
+export const StatusModel = types.enumeration("State", [
+  DATA_STATE.initial,
+  DATA_STATE.loading,
+  DATA_STATE.loaded,
+  DATA_STATE.failed,
+]);
 
-export const StatusModel = types.model({
-  state: DataStateModel,
-  error: types.string,
+export const ArticleModel = types.model({
+  id: types.string,
+  type: types.string,
+  sectionId: types.string,
+  sectionName: types.string,
+  webPublicationDate: types.string,
+  webTitle: types.string,
+  webUrl: types.string,
+  apiUrl: types.string,
+  isHosted: types.boolean,
+  pillarId: types.string,
+  pillarName: types.string,
 });

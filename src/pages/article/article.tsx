@@ -6,10 +6,12 @@ import styles from "./article.scss";
 
 import { ErrorWrapper } from "src/components/molecules/error";
 import { useStore } from "src/store";
+import { Loading } from "src/components/atoms/loading";
 
 interface IRouteProps {
   id: string;
 }
+
 const Article: React.FC = () => {
   const { article: articleStore } = useStore();
   const match = useRouteMatch<IRouteProps>();
@@ -19,7 +21,7 @@ const Article: React.FC = () => {
   }, []);
 
   if (articleStore.statuses.isLoading) {
-    return <div>Loading</div>;
+    return <Loading />;
   }
 
   if (!articleStore.article) {
@@ -30,7 +32,7 @@ const Article: React.FC = () => {
 
   return (
     <div className={styles.layout}>
-      <ErrorWrapper error="">
+      <ErrorWrapper error={articleStore.statuses.error}>
         <div key={article.webUrl} className={styles.row}>
           <div className={styles.info}>
             <p className={styles.source}>{article.sectionName}</p>
@@ -38,9 +40,9 @@ const Article: React.FC = () => {
           <div className={styles.title}>{article.webTitle}</div>
           <div className={styles.text}>{article.webTitle}</div>
         </div>
-        <Link className={styles.linkBack} to="/news">
-          Back
-        </Link>
+        <div className={styles.linkBack} >
+          <Link to="/news">Back</Link>
+        </div>
       </ErrorWrapper>
     </div>
   );

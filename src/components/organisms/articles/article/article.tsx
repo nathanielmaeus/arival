@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { IArticle } from "src/types";
 import styles from "./article.scss";
+import { Link } from "react-router-dom";
 interface ITableComponentProps {
   article: IArticle;
   isFavourite: boolean;
@@ -19,9 +20,9 @@ const Row: React.FC<ITableComponentProps> = ({ article }) => {
       </div>
       <div className={styles.title}>{article.webTitle}</div>
       <div className={styles.text}>{article.webTitle}</div>
-      <a className={styles.link} href={`/news/${hashUrl}`}>
+      <Link className={styles.link} to={`/news/${hashUrl}`}>
         Read more
-      </a>
+      </Link>
     </div>
   );
 };

@@ -35,8 +35,8 @@ export const ArticleStore = types
     const getArticle = flow(function*(id: string) {
       self.status = DATA_STATE.loading;
 
-      const pollDraftParent = getParent<RootModel>(self);
-      const selectedArticle = pollDraftParent.articles.articles.find(
+      const { articles: articlesStore } = getParent<RootModel>(self);
+      const selectedArticle = articlesStore.articles.find(
         (article) => article.id === id
       );
 

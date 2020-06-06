@@ -11,6 +11,13 @@ import { Slider } from "src/components/molecules/slider";
 import { SourceForm } from "src/components/organisms/form";
 import { IDataForm } from "src/components/organisms/form/source-form";
 import { Button } from "src/components/molecules/button";
+import { Story } from "src/components/molecules/story";
+
+const images = [
+  { url: "1.jpg", title: "Oliver Tree: album release date" },
+  { url: "2.jpg", title: "New actress: new talents in a cinema" },
+  { url: "3.jpg", title: "Keia Magazine: new photos" },
+];
 
 const Main: React.FC = () => {
   const { articles: articlesStore } = useStore();
@@ -52,6 +59,7 @@ const Main: React.FC = () => {
   return (
     <div className={styles.layout}>
       <ErrorWrapper error={statuses.articles.error}>
+        <Story className={styles.story} images={images} />
         <Button
           className={styles.createButton}
           type="button"

@@ -1,0 +1,62 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  max-height: 500px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #eee;
+  cursor: pointer;
+}
+
+.cover {
+  position: relative;
+  height: 100%;
+}
+
+.canvas {
+  display: flex;
+  transition: 0.3s;
+}
+
+.tabs {
+  display: flex;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 50%;
+  background: transparent;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.tab {
+  position: relative;
+  height: 3px;
+  width: 100%;
+  margin: 0 4px;
+  background: rgba(102, 103, 120, 1);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.progress {
+  position: absolute;
+  //width: ${({ width }: Props) => `${width}%`};
+  height: 100%;
+  background: rgba(191, 191, 191, 1);
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.title {
+  position: absolute;
+  bottom: 18px;
+  color: white;
+  font-size: 3rem;
+  left: 16px;
+  margin: 0 auto;
+}

@@ -75,7 +75,7 @@ const Slider: React.FC<ISliderProps> = ({
 
     const throttledResize = throttle(handleResize);
 
-    throttledResize();
+    handleResize();
 
     window.addEventListener("resize", throttledResize);
     return () => {

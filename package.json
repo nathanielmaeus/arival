@@ -36,10 +36,6 @@
     "typescript-eslint": "0.0.1-alpha.0",
     "webpack-merge": "^4.1.4"
   },
-  "engines": {
-    "npm": "5.7.1",
-    "node": "11.14.0"
-  },
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --color --hot --config config/webpack.dev.js",
     "build": "webpack -p  --inline --progress --color --hot --config config/webpack.prod.js",
